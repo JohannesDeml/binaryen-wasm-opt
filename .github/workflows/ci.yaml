@@ -9,37 +9,51 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run clippy
         run: cargo clippy --workspace --all-targets --all-features
       - name: Check format
         run: cargo fmt --all -- --check
+
   basic:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Optimize Wasm
-        uses: NiklasEi/wasm-opt-action@main
+        uses: JohannesDeml/wasm-opt-action@main
         with:
           file: tests/hello_wasm_basic.wasm
           output: hello_wasm_basic_optimized.wasm
+
   all-options:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Optimize Wasm
-        uses: NiklasEi/wasm-opt-action@main
+        uses: JohannesDeml/wasm-opt-action@main
         with:
           file: "tests/*_hello_wasm.wasm"
           optimize_all: true
           options: "-Oz"
+
   output-after-options:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Optimize Wasm
-        uses: NiklasEi/wasm-opt-action@main
+        uses: JohannesDeml/wasm-opt-action@main
         with:
           file: "tests/hello_wasm_basic.wasm"
           options: "-Oz"
           output: "hello_wasm_basic_optimized_z.wasm"
+
+  godot-wasm-opt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Optimize Wasm
+        uses: JohannesDeml/wasm-opt-action@main
+        with:
+          file: "tests/godot-4.3.wasm"
+          options: --enable-bulk-memory --enable-threads --enable-simd -O --intrinsic-lowering -O
+          output: "godot-4.3_optimized.wasm"
