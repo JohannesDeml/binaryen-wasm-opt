@@ -1,5 +1,5 @@
 name: 'wasm-opt action'
-author: "Niklas Eicker (@NiklasEi)"
+author: "Niklas Eicker (@NiklasEi), Johannes Deml (@JohannesDeml)"
 description: "Use WebAssembly/binaryen's wasm-opt in your workflows"
 branding:
   icon: arrow-down-circle
@@ -19,7 +19,7 @@ inputs:
     required: false
 runs:
   using: 'docker'
-  image: 'docker://niklasei/wasm-opt-action:v2.3.3'
+  image: 'docker://johannesdeml/wasm-opt-action:v1.0.0'
   args:
     - ${{ inputs.file }}
     - ${{ inputs.output }}
