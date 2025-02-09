@@ -1,9 +1,9 @@
-name: 'wasm-opt action'
+name: 'binaryen wasm-opt'
 author: "Niklas Eicker (@NiklasEi), Johannes Deml (@JohannesDeml)"
 description: "Use WebAssembly/binaryen's wasm-opt in your workflows"
 branding:
   icon: arrow-down-circle
-  color: blue
+  color: green
 inputs:
   file:
     description: 'The wasm file to optimize'
