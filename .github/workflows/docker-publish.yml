@@ -22,8 +22,8 @@ jobs:
           # Extract version numbers from tag (e.g., docker-1.122.0)
           TAG=${GITHUB_REF#refs/tags/docker-}
           echo "version=$TAG" >> $GITHUB_OUTPUT
-          # Extract binaryen version (first number)
-          BINARYEN_VERSION=$(echo $TAG | cut -d'.' -f1)
+          # Extract binaryen version (second number/minor version)
+          BINARYEN_VERSION=$(echo $TAG | cut -d'.' -f2)
           echo "binaryen_version=$BINARYEN_VERSION" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
