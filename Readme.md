@@ -39,11 +39,11 @@ Take a look at the [wasm-opt options](https://github.com/WebAssembly/binaryen/bl
 
 ```bash
 # 1. Build the image
-podman build -t docker.io/johannesdeml/wasm-opt-action:v1.0.0 .
+podman build --build-arg BINARYEN_VERSION=122 -t docker.io/johannesdeml/wasm-opt-action:v1.122.0 .
 
 # 2. Login to Docker Hub (if you haven't already)
 podman login docker.io
 
 # 3. Now push the image
-podman push docker.io/johannesdeml/wasm-opt-action:v1.0.0
+podman push docker.io/johannesdeml/wasm-opt-action:v1.122.0
 ```

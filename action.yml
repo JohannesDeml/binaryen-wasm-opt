@@ -17,9 +17,14 @@ inputs:
   options:
     description: 'Additional options to pass to wasm-opt'
     required: false
+  binaryen_version:
+    description: 'The minor version of binaryen to use (e.g. 122)'
+    required: false
+    default: '122'
 runs:
   using: 'docker'
-  image: 'docker://johannesdeml/wasm-opt-action:v1.0.0'
+  # The major/patch version needs to be updated when a new version of the action is released
+  image: 'docker://johannesdeml/wasm-opt-action:v1.${{ inputs.binaryen_version }}.0'
   args:
     - ${{ inputs.file }}
     - ${{ inputs.output }}
