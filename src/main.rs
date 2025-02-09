@@ -1,7 +1,42 @@
 use glob::glob;
 use std::io::Write;
+use std::os::unix::fs::PermissionsExt;
 use std::process::Command;
 use std::{env, fs, io};
+
+fn download_binaryen(version: &str) -> Result<(), io::Error> {
+    let download_url = format!(
+        "https://github.com/WebAssembly/binaryen/releases/download/version_{}/binaryen-version_{}-x86_64-linux.tar.gz",
+        version, version
+    );
+    println!("Downloading binaryen from: {}", download_url);
+
+    let response = ureq::get(&download_url)
+        .call()
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
+
+    let mut reader = response.into_reader();
+    let decoder = flate2::read::GzDecoder::new(&mut reader);
+    let mut archive = tar::Archive::new(decoder);
+
+    // Extract only the wasm-opt binary
+    for entry in archive.entries()? {
+        let mut entry = entry?;
+        let path = entry.path()?;
+        if let Some(filename) = path.file_name() {
+            if filename == "wasm-opt" {
+                entry.unpack("/binaryen/bin/wasm-opt")?;
+                fs::set_permissions("/binaryen/bin/wasm-opt", fs::Permissions::from_mode(0o755))?;
+                return Ok(());
+            }
+        }
+    }
+
+    Err(io::Error::new(
+        io::ErrorKind::NotFound,
+        "wasm-opt binary not found in archive",
+    ))
+}
 
 fn main() -> Result<(), io::Error> {
     // Github passes empty strings for not defined optional parameters.
@@ -14,7 +49,18 @@ fn main() -> Result<(), io::Error> {
     }
     args.remove(0);
     println!("Got arguments: {:?}", args);
+
     args.reverse();
+
+    // Get binaryen version
+    let binaryen_version = args
+        .get(0)
+        .and_then(|arg| arg.clone())
+        .unwrap_or_else(|| "122".to_string());
+
+    if !std::path::Path::new("/binaryen/bin/wasm-opt").exists() {
+        download_binaryen(&binaryen_version)?;
+    }
 
     let glob_input = format!(
         "/github/workspace/{}",

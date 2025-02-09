@@ -3,7 +3,16 @@ name: Build and Publish Docker Image
 on:
   push:
     tags:
-      - 'docker-*.*.*'
+      - 'docker-v*'
+    branches:
+      - 'v[0-9]+'
+      - 'main'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker tag (e.g. v1, v1.0.0, latest)'
+        required: true
+        type: string
 
 jobs:
   build-and-push:
@@ -16,15 +25,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract version info from tag
+      - name: Extract version info
         id: version
         run: |
-          # Extract version numbers from tag (e.g., docker-1.122.0)
-          TAG=${GITHUB_REF#refs/tags/docker-}
-          echo "version=$TAG" >> $GITHUB_OUTPUT
-          # Extract binaryen version (second number/minor version)
-          BINARYEN_VERSION=$(echo $TAG | cut -d'.' -f2)
-          echo "binaryen_version=$BINARYEN_VERSION" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "version=latest" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" =~ ^refs/heads/v[0-9]+$ ]]; then
+            # Extract version number from branch (e.g., v1)
+            BRANCH=${GITHUB_REF#refs/heads/}
+            echo "version=${BRANCH#v}" >> $GITHUB_OUTPUT
+          else
+            # Extract version from tag (e.g., docker-v1.0.0)
+            TAG=${GITHUB_REF#refs/tags/docker-}
+            echo "version=$TAG" >> $GITHUB_OUTPUT
+          fi
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -32,12 +48,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image ${{ steps.version.outputs.version }}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          build-args: |
-            BINARYEN_VERSION=${{ steps.version.outputs.binaryen_version }}
           tags: |
-            johannesdeml/binaryen-wasm-opt:v${{ steps.version.outputs.version }}
+            johannesdeml/binaryen-wasm-opt:${{ steps.version.outputs.version }}

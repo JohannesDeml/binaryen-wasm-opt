@@ -8,5 +8,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
+flate2 = "1.0"
 glob = "0.3.0"
 shell-words = "1"
+tar = "0.4"
+ureq = "2.9"
