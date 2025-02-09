@@ -35,7 +35,7 @@ jobs:
           elif [[ "${{ github.ref }}" =~ ^refs/heads/v[0-9]+$ ]]; then
             # Extract version number from branch (e.g., v1)
             BRANCH=${GITHUB_REF#refs/heads/}
-            echo "version=${BRANCH#v}" >> $GITHUB_OUTPUT
+            echo "version=${BRANCH}" >> $GITHUB_OUTPUT
           else
             # Extract version from tag (e.g., docker-v1.0.0)
             TAG=${GITHUB_REF#refs/tags/docker-}
