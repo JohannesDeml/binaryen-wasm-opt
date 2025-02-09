@@ -55,5 +55,5 @@ jobs:
         uses: JohannesDeml/wasm-opt-action@main
         with:
           file: "tests/godot-4.3.wasm"
-          options: --enable-bulk-memory --enable-threads --enable-simd -O --intrinsic-lowering -O
+          options: --enable-bulk-memory --enable-threads --enable-exception-handling --enable-simd -O --intrinsic-lowering -O
           output: "godot-4.3_optimized.wasm"
