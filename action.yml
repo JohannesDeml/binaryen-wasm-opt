@@ -27,8 +27,8 @@ runs:
     - name: Run wasm-opt
       shell: bash
       run: |
-        # Change version v1.${{ inputs.binaryen_version }}.0 in the following lines when creating a new version
-        docker pull johannesdeml/binaryen-wasm-opt:v1.${{ inputs.binaryen_version }}.0
+        # Change version v1.${{ inputs.binaryen_version }}.1 in the following lines when creating a new version
+        docker pull johannesdeml/binaryen-wasm-opt:v1.${{ inputs.binaryen_version }}.1
         docker run --rm -v ${{ github.workspace }}:/github/workspace -w /github/workspace \
-          johannesdeml/binaryen-wasm-opt:v1.${{ inputs.binaryen_version }}.0 \
+          johannesdeml/binaryen-wasm-opt:v1.${{ inputs.binaryen_version }}.1 \
           "${{ inputs.file }}" "${{ inputs.output }}" "${{ inputs.optimize_all }}" "${{ inputs.options }}"
