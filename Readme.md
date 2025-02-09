@@ -30,10 +30,6 @@ This docker action allows usage of [binaryen's](https://github.com/WebAssembly/b
 * `binaryen_version` [Optional] binaryen version used, defaults to 122.
 * `options` [Optional] options passed to wasm-opt, defaults to `-Os`. See also [wasm-opt options](https://github.com/WebAssembly/binaryen/blob/main/src/tools/optimization-options.h)
 
-```yaml
-
-```
-
 The input parameters are passed to `wasm-opt` like so: `<input> -o <output> <options>`.
 
 For more examples (e.g. for godot wasm files) see [ci.yaml](.github/workflows/ci.yaml).
