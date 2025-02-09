@@ -9,7 +9,7 @@ This docker action allows usage of [binaryen's](https://github.com/WebAssembly/b
 ```yaml
       # Optimize a single wasm file with options
       - name: Optimize file.wasm
-        uses: JohannesDeml/wasm-opt-action@v1
+        uses: JohannesDeml/binaryen-wasm-opt@v1
         with:
           file: some/path/to/file.wasm
           output: some/path/to/file.wasm
@@ -18,7 +18,7 @@ This docker action allows usage of [binaryen's](https://github.com/WebAssembly/b
 
       # Optimize all wasm files in the dist folder
       - name: Optimize all .wasm files
-        uses: JohannesDeml/wasm-opt-action@v1
+        uses: JohannesDeml/binaryen-wasm-opt@v1
         with:
           file: dist/*.wasm
           optimize_all: true

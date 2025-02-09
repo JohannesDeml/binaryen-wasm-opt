@@ -40,4 +40,4 @@ jobs:
           build-args: |
             BINARYEN_VERSION=${{ steps.version.outputs.binaryen_version }}
           tags: |
-            johannesdeml/wasm-opt-action:v${{ steps.version.outputs.version }}
+            johannesdeml/binaryen-wasm-opt:v${{ steps.version.outputs.version }}

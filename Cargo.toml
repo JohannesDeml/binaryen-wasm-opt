@@ -1,6 +1,6 @@
 [package]
 protocol = "sparse"
-name = "wasm-opt-action"
+name = "binaryen-wasm-opt"
 description = "Slim wrapper around wasm-opt"
 version = "0.1.0"
 authors = ["Niklas Eicker <git@nikl.me>, Johannes Deml <public@deml.io>"]

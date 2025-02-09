@@ -2,8 +2,8 @@ FROM rust:1.70 as build
 
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-RUN USER=root cargo new --bin wasm-opt-action
-WORKDIR /wasm-opt-action
+RUN USER=root cargo new --bin binaryen-wasm-opt
+WORKDIR /binaryen-wasm-opt
 
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
@@ -33,9 +33,9 @@ RUN mkdir binaryen && \
     fi
 ENV PATH $PATH:/binaryen/bin
 
-COPY --from=build /wasm-opt-action/target/release/wasm-opt-action .
+COPY --from=build /binaryen-wasm-opt/target/release/binaryen-wasm-opt .
 COPY LICENSE-BINARYEN .
 ENV PATH $PATH:/
-RUN chmod +x /wasm-opt-action
+RUN chmod +x /binaryen-wasm-opt
 
-ENTRYPOINT ["wasm-opt-action"]
+ENTRYPOINT ["binaryen-wasm-opt"]

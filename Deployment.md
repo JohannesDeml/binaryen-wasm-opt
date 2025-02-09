@@ -7,10 +7,6 @@ Check https://github.com/WebAssembly/binaryen/tags for the latest version and up
 ## Updating the action
 
 1. Build a new docker image and push it to dockerhub
-   * `docker build -t niklasei/wasm-opt-action:v<new version> . --no-cache`
-       * this tags it with the new action version
-   * `docker push niklasei/wasm-opt-action:v<new version>`
-   * update the docker image version in [action.yml](action.yml)
-2. Push all changes to GitHub
-3. Tag the latest commit with the new action version
-    * remember to move all other sem-version compatible tags to the new commit
+   * add tags with the ver version and the binaryen version you want to use with the pattern `major.binaryen-version.patch` (e.g. `1.122.0`)
+2. Update version in [action.yml](action.yml) (see comment in file)
+3. Create new release in the GitHub UI and add the changelog for the new version
