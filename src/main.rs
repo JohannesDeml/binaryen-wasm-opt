@@ -1,7 +1,7 @@
 use glob::glob;
 use std::io::Write;
 use std::process::Command;
-use std::{env, io};
+use std::{env, io, fs};
 
 fn main() -> Result<(), io::Error> {
     // Github passes empty strings for not defined optional parameters.
@@ -34,6 +34,12 @@ fn main() -> Result<(), io::Error> {
             .to_owned();
         println!("Optimizing '{input}'");
 
+        // Log input file size
+        let input_size = fs::metadata(&input)
+            .map(|m| m.len())
+            .unwrap_or_else(|_| 0);
+        println!("Input file size: {} bytes", input_size);
+
         let output = if let Some(output) = output.clone() {
             format!("/github/workspace/{}", output.trim_start_matches('/'))
         } else {
@@ -41,17 +47,39 @@ fn main() -> Result<(), io::Error> {
         };
         println!("Writing optimized wasm file to '{output}'");
         println!("Executing 'wasm-opt {input} -o {output} {options}'");
-        let output = Command::new("wasm-opt")
-            .args([input, "-o".to_owned(), output])
+        let cmd_output = Command::new("wasm-opt")
+            .args([input, "-o".to_owned(), output.clone()])
             .args(shell_words::split(&options).expect("Failed to parse options"))
             .output()
             .expect("failed to execute command");
+
+        // Write output regardless of success/failure
         io::stdout()
-            .write_all(&output.stdout)
+            .write_all(&cmd_output.stdout)
             .expect("failed to write to stdout");
         io::stderr()
-            .write_all(&output.stderr)
+            .write_all(&cmd_output.stderr)
             .expect("failed to write to stderr");
+
+        // Check if the command was successful
+        if !cmd_output.status.success() {
+            return Err(io::Error::new(
+                io::ErrorKind::Other,
+                format!("wasm-opt failed with status: {}", cmd_output.status)
+            ));
+        }
+
+        // Log output file size and reduction percentage
+        let output_size = fs::metadata(&output)
+            .map(|m| m.len())
+            .unwrap_or_else(|_| 0);
+        let size_reduction = if input_size > 0 {
+            ((input_size as f64 - output_size as f64) / input_size as f64 * 100.0).round()
+        } else {
+            0.0
+        };
+        println!("Output file size: {} bytes ({}% reduction)", output_size, size_reduction);
+
         if !optimize_all {
             break;
         }
