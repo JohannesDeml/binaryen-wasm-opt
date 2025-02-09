@@ -22,11 +22,12 @@ inputs:
     required: false
     default: '122'
 runs:
-  using: 'docker'
-  # The major/patch version needs to be updated when a new version of the action is released
-  image: 'docker://johannesdeml/wasm-opt-action:v1.${{ inputs.binaryen_version }}.0'
-  args:
-    - ${{ inputs.file }}
-    - ${{ inputs.output }}
-    - ${{ inputs.optimize_all }}
-    - ${{ inputs.options }}
+  using: 'composite'
+  steps:
+    - name: Run wasm-opt
+      shell: bash
+      run: |
+        docker pull johannesdeml/wasm-opt-action:v1.${{ inputs.binaryen_version }}.0
+        docker run --rm -v ${{ github.workspace }}:/github/workspace -w /github/workspace \
+          johannesdeml/wasm-opt-action:v1.${{ inputs.binaryen_version }}.0 \
+          "${{ inputs.file }}" "${{ inputs.output }}" "${{ inputs.optimize_all }}" "${{ inputs.options }}"
