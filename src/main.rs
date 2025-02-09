@@ -1,7 +1,7 @@
 use glob::glob;
 use std::io::Write;
 use std::process::Command;
-use std::{env, io, fs};
+use std::{env, fs, io};
 
 fn main() -> Result<(), io::Error> {
     // Github passes empty strings for not defined optional parameters.
@@ -35,9 +35,7 @@ fn main() -> Result<(), io::Error> {
         println!("Optimizing '{input}'");
 
         // Log input file size
-        let input_size = fs::metadata(&input)
-            .map(|m| m.len())
-            .unwrap_or_else(|_| 0);
+        let input_size = fs::metadata(&input).map(|m| m.len()).unwrap_or_else(|_| 0);
         println!("Input file size: {} bytes", input_size);
 
         let output = if let Some(output) = output.clone() {
@@ -65,20 +63,21 @@ fn main() -> Result<(), io::Error> {
         if !cmd_output.status.success() {
             return Err(io::Error::new(
                 io::ErrorKind::Other,
-                format!("wasm-opt failed with status: {}", cmd_output.status)
+                format!("wasm-opt failed with status: {}", cmd_output.status),
             ));
         }
 
         // Log output file size and reduction percentage
-        let output_size = fs::metadata(&output)
-            .map(|m| m.len())
-            .unwrap_or_else(|_| 0);
+        let output_size = fs::metadata(&output).map(|m| m.len()).unwrap_or_else(|_| 0);
         let size_reduction = if input_size > 0 {
             ((input_size as f64 - output_size as f64) / input_size as f64 * 100.0).round()
         } else {
             0.0
         };
-        println!("Output file size: {} bytes ({}% reduction)", output_size, size_reduction);
+        println!(
+            "Output file size: {} bytes ({}% reduction)",
+            output_size, size_reduction
+        );
 
         if !optimize_all {
             break;
