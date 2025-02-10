@@ -25,7 +25,7 @@ inputs:
 runs:
   using: 'docker'
   # Make sure the correct tag is used for releases & release branches
-  image: 'docker://johannesdeml/binaryen-wasm-opt:latest'
+  image: 'docker://johannesdeml/binaryen-wasm-opt:v1'
   args:
     - ${{ inputs.file }}
     - ${{ inputs.output }}
