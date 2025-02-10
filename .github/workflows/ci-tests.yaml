@@ -1,4 +1,4 @@
-name: ci
+name: CI Tests
 
 on:
   pull_request:
@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Optimize Wasm
-        uses: JohannesDeml/binaryen-wasm-opt@main
+        uses: ./
         with:
           file: tests/hello_wasm_basic.wasm
           output: hello_wasm_basic_optimized.wasm
@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Optimize Wasm
-        uses: JohannesDeml/binaryen-wasm-opt@main
+        uses: ./
         with:
           file: "tests/*_hello_wasm.wasm"
           optimize_all: true
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Optimize Wasm
-        uses: JohannesDeml/binaryen-wasm-opt@main
+        uses: ./
         with:
           file: "tests/hello_wasm_basic.wasm"
           options: "-Oz"
@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Optimize Wasm
-        uses: JohannesDeml/binaryen-wasm-opt@main
+        uses: ./
         with:
           file: "tests/godot-4.3.wasm"
           options: --enable-bulk-memory --enable-threads --enable-exception-handling --enable-simd -O --intrinsic-lowering -O
