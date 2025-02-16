@@ -61,3 +61,14 @@ jobs:
           file: "tests/godot-4.3.wasm"
           options: --enable-bulk-memory --enable-threads --enable-exception-handling --enable-simd -O --intrinsic-lowering -O
           output: "godot-4.3_optimized.wasm"
+
+  godot-wasm-opt-4-1-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Optimize Wasm
+        uses: ./
+        with:
+          file: "tests/godot-4.1.2.wasm"
+          options: --enable-bulk-memory --enable-threads --enable-exception-handling --enable-simd -O --intrinsic-lowering -O
+          output: "godot-4.1.2_optimized.wasm"
