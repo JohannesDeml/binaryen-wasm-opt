@@ -59,7 +59,7 @@ jobs:
         uses: ./
         with:
           file: "tests/godot-4.3.wasm"
-          options: --enable-bulk-memory --enable-threads --enable-exception-handling --enable-simd -O --intrinsic-lowering -O
+          options: -all --post-emscripten -Oz
           output: "godot-4.3_optimized.wasm"
 
   godot-wasm-opt-4-1-2:
